@@ -5,6 +5,7 @@ import App from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const darkTheme = createTheme({
   palette: {
