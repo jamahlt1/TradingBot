@@ -1,0 +1,1 @@
+0 * * * * cd /workspace && bash run_build_check.sh > /workspace/cron_test.log 2>&1
