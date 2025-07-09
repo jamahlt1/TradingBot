@@ -1,4 +1,4 @@
-THIS SHOULD BE A LINTER ERRORfrom fastapi import FastAPI, APIRouter
+THIS SHOULD BE A LINTER ERRORTHIS SHOULD BE A LINTER ERRORfrom fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
