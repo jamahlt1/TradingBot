@@ -1,4 +1,6 @@
-THIS SHOULD BE A LINTER ERRORTHIS SHOULD BE A LINTER ERRORfrom fastapi import FastAPI, APIRouter
+# NOTE: This file will be refactored into an 'app/' directory for modular backend code.
+# All routers, models, and config will be split into separate files.
+from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
