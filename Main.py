@@ -29,3 +29,23 @@ app.include_router(router_strategies)
 app.include_router(router_accounts)
 app.include_router(router_trades)
 app.include_router(router_analytics)
+
+@router_auth.get("/login")
+def login_example():
+    return {"message": "Auth login endpoint (placeholder)"}
+
+@router_strategies.get("/")
+def list_strategies():
+    return {"strategies": []}
+
+@router_accounts.get("/")
+def list_accounts():
+    return {"accounts": []}
+
+@router_trades.get("/")
+def list_trades():
+    return {"trades": []}
+
+@router_analytics.get("/")
+def analytics_overview():
+    return {"analytics": {}}
