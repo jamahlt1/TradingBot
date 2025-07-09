@@ -8,6 +8,17 @@ This repository includes a script and cron setup to automatically run your build
    - Run `crontab .cron` to install the hourly job for your user.
 3. Output will be logged to `cron_test.log` in the project root.
 
+### Dynamic Build/Test Command
+
+- Place your build/test command in a file named `build_command.conf` (one line, e.g., `pytest` or `python Main.py`).
+- The cron job and `run_build_check.sh` will always use the latest command from this file.
+- All output is timestamped and logged to `cron_test.log`.
+
+### Example
+```
+echo "pytest" > build_command.conf
+```
+
 ---
 
 **Note:** You can also set up git hooks (e.g., pre-commit or pre-push) to run tests before pushing code. Let us know if you want this configured!
