@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@mui/material": "^5.15.14",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.0",
     "cra-template-pwa-typescript": "2.0.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
