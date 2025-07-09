@@ -1,5 +1,11 @@
 import React from 'react';
 import { AppBar, Toolbar, Typography, Drawer, List, ListItem, ListItemText, CssBaseline, Box } from '@mui/material';
+import Dashboard from './pages/Dashboard';
+import Strategies from './pages/Strategies';
+import Accounts from './pages/Accounts';
+import Trades from './pages/Trades';
+import Analytics from './pages/Analytics';
+import Settings from './pages/Settings';
 
 const drawerWidth = 220;
 const sections = [
@@ -13,6 +19,25 @@ const sections = [
 
 function App() {
   const [selected, setSelected] = React.useState('Dashboard');
+
+  const renderContent = () => {
+    switch (selected) {
+      case 'Dashboard':
+        return <Dashboard />;
+      case 'Strategies':
+        return <Strategies />;
+      case 'Accounts':
+        return <Accounts />;
+      case 'Trades':
+        return <Trades />;
+      case 'Analytics':
+        return <Analytics />;
+      case 'Settings':
+        return <Settings />;
+      default:
+        return <Dashboard />;
+    }
+  };
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -45,10 +70,7 @@ function App() {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3, ml: `${drawerWidth}px` }}>
         <Toolbar />
-        <Typography variant="h4" gutterBottom>
-          {selected}
-        </Typography>
-        {/* TODO: Render section content here */}
+        {renderContent()}
       </Box>
     </Box>
   );
