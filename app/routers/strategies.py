@@ -9,6 +9,10 @@ from app.routers.auth import get_current_user
 from app.models.user import User
 from app.models.strategy import Strategy
 from app.models.trade import Trade
+from app.strategies.engine.pairs_trading import PairsTradingStrategy
+from app.strategies.engine.scalping import ScalpingStrategy
+from app.strategies.engine.sentiment_trading import SentimentTradingStrategy
+import pandas as pd
 
 router = APIRouter(prefix="/strategies", tags=["strategies"])
 
@@ -99,6 +103,82 @@ def delete_strategy(
     if db_strategy is None:
         raise HTTPException(status_code=404, detail="Strategy not found")
     return {"ok": True}
+
+@router.post("/{strategy_id}/run")
+def run_strategy(
+    strategy_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Run a strategy and generate signals"""
+    strategy = crud_strategy.get_strategy(db, strategy_id=strategy_id, user_id=current_user.id)
+    if not strategy:
+        raise HTTPException(status_code=404, detail="Strategy not found")
+    
+    # Initialize strategy based on type
+    if strategy.strategy_type == "pairs_trading":
+        strategy_engine = PairsTradingStrategy(
+            lookback=120,
+            entry_z=2.0,
+            exit_z=0.5,
+            allocation=strategy.allocation
+        )
+        # TODO: Fetch real price data and run strategy
+        signals = strategy_engine.generate_signals(pd.DataFrame())
+        
+    elif strategy.strategy_type == "scalping":
+        strategy_engine = ScalpingStrategy(
+            rsi_period=14,
+            allocation=strategy.allocation
+        )
+        # TODO: Fetch real price data and run strategy
+        signals = strategy_engine.generate_signals(pd.DataFrame())
+        
+    elif strategy.strategy_type == "sentiment_trading":
+        strategy_engine = SentimentTradingStrategy(
+            sentiment_threshold=0.2,
+            allocation=strategy.allocation
+        )
+        # TODO: Fetch real sentiment data and run strategy
+        signals = strategy_engine.generate_signals("BTC")
+        
+    else:
+        raise HTTPException(status_code=400, detail="Strategy type not implemented")
+    
+    return {
+        "strategy_id": strategy_id,
+        "strategy_name": strategy.name,
+        "strategy_type": strategy.strategy_type,
+        "signals": signals,
+        "timestamp": pd.Timestamp.now().isoformat()
+    }
+
+@router.post("/{strategy_id}/backtest")
+def backtest_strategy(
+    strategy_id: int,
+    start_date: str,
+    end_date: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Backtest a strategy with historical data"""
+    strategy = crud_strategy.get_strategy(db, strategy_id=strategy_id, user_id=current_user.id)
+    if not strategy:
+        raise HTTPException(status_code=404, detail="Strategy not found")
+    
+    # TODO: Fetch historical data and run backtest
+    # For now, return placeholder results
+    return {
+        "strategy_id": strategy_id,
+        "strategy_name": strategy.name,
+        "start_date": start_date,
+        "end_date": end_date,
+        "total_return": 0.0,
+        "sharpe_ratio": 0.0,
+        "max_drawdown": 0.0,
+        "win_rate": 0.0,
+        "total_trades": 0
+    }
 
 @router.get("/{strategy_id}/performance")
 def get_strategy_performance(
