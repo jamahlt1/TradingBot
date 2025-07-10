@@ -199,3 +199,6 @@ cython==3.0.6
 iex-api-python==0.0.4
 intrinio-sdk==6.24.0
 tiingo==0.14.0
+
+# Note: MetaTrader5==5.0.45 is Windows-only and replaced with Linux alternatives above
+# Note: Bloomberg Terminal (blpapi) requires special licensing and is replaced with alternatives
