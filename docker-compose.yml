@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  backend:
+    build: .
+    container_name: tradingbot-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/tradingbot
+    depends_on:
+      - db
+    restart: always
+
+  frontend:
+    image: node:18
+    container_name: tradingbot-frontend
+    working_dir: /frontend
+    volumes:
+      - ./frontend:/frontend
+    command: sh -c "npm install && npm run build && npx serve -s build -l 8080"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - backend
+    restart: always
+
+  db:
+    image: postgres:14
+    container_name: tradingbot-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: tradingbot
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: always
+
+volumes:
+  pgdata:

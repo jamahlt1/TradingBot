@@ -429,3 +429,84 @@ for signal in signals:
 **Ready to start trading?** 🚀
 
 Check out the [Quick Start Guide](docs/quickstart.md) for detailed instructions!
+
+---
+
+## 🚀 Docker Deployment
+
+### Prerequisites
+- Docker and Docker Compose installed
+
+### Quick Start
+
+1. **Clone the repository:**
+   ```bash
+   git clone <your-repo-url>
+   cd <project-root>
+   ```
+
+2. **Build and start all services:**
+   ```bash
+   docker-compose up --build -d
+   ```
+   This will start:
+   - Backend API (FastAPI, Uvicorn) on [http://localhost:8000](http://localhost:8000)
+   - Frontend (React/Bootstrap) on [http://localhost:8080](http://localhost:8080)
+   - PostgreSQL database on port 5432
+
+3. **Initialize the database (if needed):**
+   - Run migrations or setup scripts as required by your backend (see docs or scripts/setup_database.py if present).
+
+4. **Access the platform:**
+   - **Frontend:** [http://localhost:8080](http://localhost:8080)
+   - **Backend API:** [http://localhost:8000/docs](http://localhost:8000/docs) (Swagger UI)
+
+5. **Stop all services:**
+   ```bash
+   docker-compose down
+   ```
+
+---
+
+## 🧮 CAPM Analytics (Capital Asset Pricing Model)
+
+The platform now supports full CAPM analytics for both individual assets and user portfolios.
+
+### API Endpoints
+- **Asset CAPM:**
+  - `GET /analytics/capm/asset?symbol=BTCUSDT&market_symbol=SPY&risk_free_rate=0.03`
+- **Portfolio CAPM:**
+  - `GET /analytics/capm/portfolio?market_symbol=SPY&risk_free_rate=0.03`
+
+**Parameters:**
+- `symbol`: Asset symbol (e.g. BTCUSDT, AAPL)
+- `market_symbol`: Market index symbol (e.g. SPY, BTCUSD)
+- `risk_free_rate`: Annual risk-free rate (e.g. 0.03 for 3%)
+- `lookback_days`: Number of days for historical returns (default: 252)
+
+**Returns:**
+- `beta`: Asset/portfolio beta
+- `expected_return`: CAPM expected return
+- `realized_return`: Actual annualized return
+- `alpha`: Alpha (excess return)
+- `risk_premium`: Market risk premium
+
+### Usage
+- Use the API endpoints above to analyze risk/return for any asset or your portfolio.
+- CAPM analytics are available in the dashboard, strategy, and portfolio analytics screens.
+
+---
+
+## 🛠️ Troubleshooting
+- If you encounter issues, check logs with:
+  ```bash
+  docker-compose logs backend
+  docker-compose logs frontend
+  docker-compose logs db
+  ```
+- Ensure ports 8000, 8080, and 5432 are free.
+- For database errors, ensure migrations are applied and the database is healthy.
+
+---
+
+For more, see the [API Guide](docs/api_guide.md), [CLI Guide](docs/cli_guide.md), and [GUI Guide](docs/gui_guide.md).
