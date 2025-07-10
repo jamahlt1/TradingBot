@@ -3,17 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enterprise Trading Bot Platform</title>
+    <title>Advanced Trading Bot Platform</title>
     
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- TradingView Widget -->
     <script src="https://s3.tradingview.com/tv.js"></script>
     <!-- Custom CSS -->
+    <link href="assets/css/style.css" rel="stylesheet">
+    
     <style>
         :root {
             --primary-color: #2c3e50;
@@ -21,338 +23,223 @@
             --success-color: #27ae60;
             --warning-color: #f39c12;
             --danger-color: #e74c3c;
-            --dark-bg: #1a1a1a;
-            --card-bg: #2d2d2d;
-            --text-light: #ecf0f1;
+            --dark-color: #34495e;
+            --light-color: #ecf0f1;
         }
-
+        
         body {
-            background-color: var(--dark-bg);
-            color: var(--text-light);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
-        .navbar {
-            background-color: var(--primary-color) !important;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            border: 1px solid #444;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
-        .card-header {
-            background-color: var(--primary-color);
-            border-bottom: 1px solid #444;
-            color: var(--text-light);
-        }
-
-        .btn-primary {
-            background-color: var(--secondary-color);
-            border-color: var(--secondary-color);
-        }
-
-        .btn-success {
-            background-color: var(--success-color);
-            border-color: var(--success-color);
-        }
-
-        .btn-warning {
-            background-color: var(--warning-color);
-            border-color: var(--warning-color);
-        }
-
-        .btn-danger {
-            background-color: var(--danger-color);
-            border-color: var(--danger-color);
-        }
-
-        .table {
-            color: var(--text-light);
-        }
-
-        .table-dark {
-            background-color: var(--card-bg);
-        }
-
-        .form-control, .form-select {
-            background-color: var(--card-bg);
-            border: 1px solid #444;
-            color: var(--text-light);
-        }
-
-        .form-control:focus, .form-select:focus {
-            background-color: var(--card-bg);
-            border-color: var(--secondary-color);
-            color: var(--text-light);
-            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
-        }
-
-        .alert {
-            border-radius: 8px;
-        }
-
-        .progress {
-            background-color: #444;
-        }
-
-        .badge {
-            font-size: 0.8em;
-        }
-
+        
         .sidebar {
-            background-color: var(--primary-color);
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
             min-height: 100vh;
-            padding-top: 20px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
         }
-
-        .sidebar .nav-link {
-            color: var(--text-light);
-            padding: 10px 20px;
-            border-radius: 5px;
-            margin: 2px 0;
-        }
-
-        .sidebar .nav-link:hover {
-            background-color: var(--secondary-color);
-        }
-
-        .sidebar .nav-link.active {
-            background-color: var(--secondary-color);
-        }
-
+        
         .main-content {
-            padding: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            min-height: 100vh;
+            border-radius: 20px 0 0 20px;
+            margin: 10px 0 10px 0;
         }
-
-        .stats-card {
-            text-align: center;
-            padding: 20px;
+        
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
         }
-
-        .stats-card .number {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: var(--secondary-color);
+        
+        .card:hover {
+            transform: translateY(-5px);
         }
-
-        .stats-card .label {
-            font-size: 0.9rem;
-            color: #aaa;
-            text-transform: uppercase;
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            border: none;
+            border-radius: 25px;
+            padding: 10px 25px;
         }
-
-        .chart-container {
-            position: relative;
-            height: 400px;
-            margin: 20px 0;
+        
+        .btn-danger {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            border: none;
+            border-radius: 25px;
+            padding: 10px 25px;
         }
-
-        .position-card {
-            border-left: 4px solid var(--success-color);
-        }
-
-        .position-card.loss {
-            border-left-color: var(--danger-color);
-        }
-
-        .strategy-card {
-            transition: transform 0.2s;
-        }
-
-        .strategy-card:hover {
-            transform: translateY(-2px);
-        }
-
-        .risk-indicator {
-            width: 10px;
-            height: 10px;
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
             display: inline-block;
-            margin-right: 5px;
+            margin-right: 8px;
         }
-
-        .risk-low { background-color: var(--success-color); }
-        .risk-medium { background-color: var(--warning-color); }
-        .risk-high { background-color: var(--danger-color); }
-
-        .loading {
-            display: none;
+        
+        .status-active { background-color: #27ae60; }
+        .status-paused { background-color: #f39c12; }
+        .status-stopped { background-color: #e74c3c; }
+        
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 10px 0;
         }
-
-        .loading.show {
-            display: block;
+        
+        .trading-widget {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 10px 0;
         }
-
-        .toast {
-            background-color: var(--card-bg);
-            color: var(--text-light);
+        
+        .failsafe-panel {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 10px 0;
         }
-
-        .modal-content {
-            background-color: var(--card-bg);
-            color: var(--text-light);
-        }
-
-        .modal-header {
-            border-bottom: 1px solid #444;
-        }
-
-        .modal-footer {
-            border-top: 1px solid #444;
-        }
-
-        .tradingview-widget-container {
-            height: 500px;
-        }
-
-        .opportunity-card {
-            border: 2px solid transparent;
-            transition: all 0.3s;
-        }
-
-        .opportunity-card:hover {
-            border-color: var(--secondary-color);
-            box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
-        }
-
-        .opportunity-card.high-score {
-            border-color: var(--success-color);
-        }
-
-        .opportunity-card.medium-score {
-            border-color: var(--warning-color);
-        }
-
-        .opportunity-card.low-score {
-            border-color: var(--danger-color);
+        
+        .balance-protection {
+            background: linear-gradient(45deg, #27ae60, #2ecc71);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 10px 0;
         }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">
-                <i class="bi bi-graph-up"></i> Trading Bot Platform
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#dashboard">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#strategies">Strategies</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#portfolio">Portfolio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#trading">Trading</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#analytics">Analytics</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-person-circle"></i> User
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-dark">
-                            <li><a class="dropdown-item" href="#profile">Profile</a></li>
-                            <li><a class="dropdown-item" href="#settings">Settings</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#logout">Logout</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
-            <div class="col-md-2 sidebar">
-                <div class="d-flex flex-column">
-                    <div class="mb-4">
-                        <h6 class="text-muted">QUICK ACTIONS</h6>
-                        <button class="btn btn-success btn-sm w-100 mb-2" onclick="emergencyClose()">
-                            <i class="bi bi-exclamation-triangle"></i> Emergency Close
+            <div class="col-md-3 col-lg-2 sidebar">
+                <div class="d-flex flex-column flex-shrink-0 p-3 text-white">
+                    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                        <i class="fas fa-chart-line me-2"></i>
+                        <span class="fs-4">Trading Bot</span>
+                    </a>
+                    <hr>
+                    <ul class="nav nav-pills flex-column mb-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link text-white active" onclick="showDashboard()">
+                                <i class="fas fa-tachometer-alt me-2"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-link text-white" onclick="showAnalytics()">
+                                <i class="fas fa-chart-bar me-2"></i>
+                                Analytics
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-link text-white" onclick="showStrategies()">
+                                <i class="fas fa-cogs me-2"></i>
+                                Strategies
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-link text-white" onclick="showBacktester()">
+                                <i class="fas fa-flask me-2"></i>
+                                Backtester
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-link text-white" onclick="showLiveTrading()">
+                                <i class="fas fa-play-circle me-2"></i>
+                                Live Trading
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-link text-white" onclick="showTradeManagement()">
+                                <i class="fas fa-exchange-alt me-2"></i>
+                                Trade Management
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-link text-white" onclick="showBalances()">
+                                <i class="fas fa-wallet me-2"></i>
+                                Balances
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-link text-white" onclick="showSettings()">
+                                <i class="fas fa-cog me-2"></i>
+                                Settings
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-link text-white" onclick="showProfile()">
+                                <i class="fas fa-user me-2"></i>
+                                Profile
+                            </a>
+                        </li>
+                    </ul>
+                    <hr>
+                    <!-- Failsafe Panel -->
+                    <div class="failsafe-panel">
+                        <h6><i class="fas fa-shield-alt me-2"></i>Failsafe Controls</h6>
+                        <button class="btn btn-warning btn-sm w-100 mb-2" onclick="pauseAllStrategies()">
+                            <i class="fas fa-pause me-1"></i>Pause All
                         </button>
-                        <button class="btn btn-warning btn-sm w-100 mb-2" onclick="hedgePositions()">
-                            <i class="bi bi-shield"></i> Hedge Positions
+                        <button class="btn btn-danger btn-sm w-100" onclick="emergencyStop()">
+                            <i class="fas fa-stop me-1"></i>Emergency Stop
                         </button>
-                        <button class="btn btn-info btn-sm w-100" onclick="optimizeStrategies()">
-                            <i class="bi bi-gear"></i> Optimize
-                        </button>
-                    </div>
-
-                    <div class="mb-4">
-                        <h6 class="text-muted">STRATEGIES</h6>
-                        <div class="nav flex-column">
-                            <a class="nav-link" href="#trend-following">Trend Following</a>
-                            <a class="nav-link" href="#arbitrage">Arbitrage</a>
-                            <a class="nav-link" href="#pairs-trading">Pairs Trading</a>
-                            <a class="nav-link" href="#scalping">Scalping</a>
-                            <a class="nav-link" href="#sentiment">Sentiment</a>
-                            <a class="nav-link" href="#crypto">Crypto</a>
-                        </div>
-                    </div>
-
-                    <div class="mb-4">
-                        <h6 class="text-muted">INTEGRATIONS</h6>
-                        <div class="nav flex-column">
-                            <a class="nav-link" href="#pump-fun">Pump.fun</a>
-                            <a class="nav-link" href="#solana">Solana</a>
-                            <a class="nav-link" href="#metatrader">MetaTrader</a>
-                            <a class="nav-link" href="#coingecko">CoinGecko</a>
-                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Main Content -->
-            <div class="col-md-10 main-content">
-                <!-- Dashboard -->
-                <div id="dashboard-content">
-                    <div class="row mb-4">
-                        <div class="col-12">
-                            <h2><i class="bi bi-speedometer2"></i> Dashboard</h2>
+            <div class="col-md-9 col-lg-10 main-content">
+                <!-- Dashboard Section -->
+                <div id="dashboard-section">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h1 class="h2">Trading Dashboard</h1>
+                        <div class="btn-toolbar mb-2 mb-md-0">
+                            <div class="btn-group me-2">
+                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="refreshDashboard()">
+                                    <i class="fas fa-sync-alt"></i> Refresh
+                                </button>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Stats Cards -->
+                    <!-- Key Metrics Row -->
                     <div class="row mb-4">
                         <div class="col-md-3">
-                            <div class="card stats-card">
-                                <div class="number" id="total-pnl">$0.00</div>
-                                <div class="label">Total P&L</div>
+                            <div class="metric-card">
+                                <h5>Total P&L</h5>
+                                <h3 id="total-pnl">$0.00</h3>
+                                <small id="pnl-change">+0.00%</small>
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <div class="card stats-card">
-                                <div class="number" id="active-positions">0</div>
-                                <div class="label">Active Positions</div>
+                            <div class="metric-card">
+                                <h5>Active Strategies</h5>
+                                <h3 id="active-strategies">0</h3>
+                                <small>Running</small>
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <div class="card stats-card">
-                                <div class="number" id="win-rate">0%</div>
-                                <div class="label">Win Rate</div>
+                            <div class="metric-card">
+                                <h5>Open Positions</h5>
+                                <h3 id="open-positions">0</h3>
+                                <small>Total</small>
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <div class="card stats-card">
-                                <div class="number" id="portfolio-value">$0.00</div>
-                                <div class="label">Portfolio Value</div>
+                            <div class="metric-card">
+                                <h5>Win Rate</h5>
+                                <h3 id="win-rate">0%</h3>
+                                <small>Today</small>
                             </div>
                         </div>
                     </div>
@@ -362,74 +249,101 @@
                         <div class="col-md-8">
                             <div class="card">
                                 <div class="card-header">
-                                    <h5><i class="bi bi-graph-up"></i> Portfolio Performance</h5>
+                                    <h5><i class="fas fa-chart-line me-2"></i>Portfolio Performance</h5>
                                 </div>
                                 <div class="card-body">
-                                    <div class="chart-container">
-                                        <canvas id="portfolioChart"></canvas>
-                                    </div>
+                                    <canvas id="portfolioChart" height="100"></canvas>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="card">
                                 <div class="card-header">
-                                    <h5><i class="bi bi-pie-chart"></i> Asset Allocation</h5>
+                                    <h5><i class="fas fa-chart-pie me-2"></i>Asset Allocation</h5>
                                 </div>
                                 <div class="card-body">
-                                    <div class="chart-container">
-                                        <canvas id="allocationChart"></canvas>
-                                    </div>
+                                    <canvas id="allocationChart"></canvas>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Trading Opportunities -->
+                    <!-- Trading Widgets Row -->
                     <div class="row mb-4">
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-header d-flex justify-content-between align-items-center">
-                                    <h5><i class="bi bi-lightning"></i> Trading Opportunities</h5>
-                                    <button class="btn btn-primary btn-sm" onclick="refreshOpportunities()">
-                                        <i class="bi bi-arrow-clockwise"></i> Refresh
-                                    </button>
-                                </div>
-                                <div class="card-body">
-                                    <div id="opportunities-container">
-                                        <!-- Opportunities will be loaded here -->
+                        <div class="col-md-6">
+                            <div class="trading-widget">
+                                <h5><i class="fas fa-chart-area me-2"></i>Live Price Chart</h5>
+                                <div id="tradingview-widget"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="trading-widget">
+                                <h5><i class="fas fa-list me-2"></i>Recent Trades</h5>
+                                <div id="recent-trades">
+                                    <div class="table-responsive">
+                                        <table class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>Symbol</th>
+                                                    <th>Type</th>
+                                                    <th>P&L</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="trades-table-body">
+                                                <!-- Trades will be populated here -->
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Active Positions -->
-                    <div class="row mb-4">
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5><i class="bi bi-list-check"></i> Active Positions</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div id="positions-container">
-                                        <!-- Positions will be loaded here -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Risk Alerts -->
+                    <!-- Strategy Status Row -->
                     <div class="row mb-4">
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h5><i class="bi bi-exclamation-triangle"></i> Risk Alerts</h5>
+                                    <h5><i class="fas fa-cogs me-2"></i>Strategy Status</h5>
                                 </div>
                                 <div class="card-body">
-                                    <div id="alerts-container">
-                                        <!-- Alerts will be loaded here -->
+                                    <div id="strategy-status-grid">
+                                        <!-- Strategy status cards will be populated here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Balance Protection Row -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="balance-protection">
+                                <h5><i class="fas fa-shield-alt me-2"></i>Balance Protection</h5>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <p>Daily Loss Limit: <strong id="daily-loss-limit">$0.00</strong></p>
+                                        <p>Max Drawdown: <strong id="max-drawdown">0%</strong></p>
+                                    </div>
+                                    <div class="col-6">
+                                        <p>Protected Balance: <strong id="protected-balance">$0.00</strong></p>
+                                        <p>Risk Level: <strong id="risk-level">Low</strong></p>
+                                    </div>
+                                </div>
+                                <button class="btn btn-light btn-sm" onclick="showBalanceProtectionSettings()">
+                                    <i class="fas fa-cog me-1"></i>Configure
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5><i class="fas fa-robot me-2"></i>AI Recommendations</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="ai-recommendations">
+                                        <!-- AI recommendations will be populated here -->
                                     </div>
                                 </div>
                             </div>
@@ -437,103 +351,15 @@
                     </div>
                 </div>
 
-                <!-- Strategies Section -->
-                <div id="strategies-content" style="display: none;">
-                    <div class="row mb-4">
-                        <div class="col-12">
-                            <h2><i class="bi bi-gear"></i> Strategy Management</h2>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-4 mb-4">
-                            <div class="card strategy-card">
-                                <div class="card-header">
-                                    <h6>Trend Following</h6>
-                                </div>
-                                <div class="card-body">
-                                    <p class="text-muted">Advanced trend following with ML optimization</p>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span class="badge bg-success">Active</span>
-                                        <button class="btn btn-primary btn-sm" onclick="configureStrategy('trend_following')">
-                                            Configure
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4 mb-4">
-                            <div class="card strategy-card">
-                                <div class="card-header">
-                                    <h6>Crypto Arbitrage</h6>
-                                </div>
-                                <div class="card-body">
-                                    <p class="text-muted">Multi-exchange arbitrage with correlation analysis</p>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span class="badge bg-warning">Paused</span>
-                                        <button class="btn btn-primary btn-sm" onclick="configureStrategy('crypto_arbitrage')">
-                                            Configure
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4 mb-4">
-                            <div class="card strategy-card">
-                                <div class="card-header">
-                                    <h6>Pairs Trading</h6>
-                                </div>
-                                <div class="card-body">
-                                    <p class="text-muted">Statistical arbitrage with cointegration</p>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span class="badge bg-success">Active</span>
-                                        <button class="btn btn-primary btn-sm" onclick="configureStrategy('pairs_trading')">
-                                            Configure
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Portfolio Section -->
-                <div id="portfolio-content" style="display: none;">
-                    <div class="row mb-4">
-                        <div class="col-12">
-                            <h2><i class="bi bi-briefcase"></i> Portfolio</h2>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5>Portfolio Overview</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="tradingview-widget-container">
-                                        <div id="tradingview_chart"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5>Risk Metrics</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div id="risk-metrics">
-                                        <!-- Risk metrics will be loaded here -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <!-- Other sections will be loaded dynamically -->
+                <div id="analytics-section" style="display: none;"></div>
+                <div id="strategies-section" style="display: none;"></div>
+                <div id="backtester-section" style="display: none;"></div>
+                <div id="live-trading-section" style="display: none;"></div>
+                <div id="trade-management-section" style="display: none;"></div>
+                <div id="balances-section" style="display: none;"></div>
+                <div id="settings-section" style="display: none;"></div>
+                <div id="profile-section" style="display: none;"></div>
             </div>
         </div>
     </div>
@@ -544,48 +370,83 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Configure Strategy</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    <h5 class="modal-title">Strategy Configuration</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="strategyForm">
+                    <form id="strategy-form">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Strategy Name</label>
-                                    <input type="text" class="form-control" id="strategyName" readonly>
+                                    <input type="text" class="form-control" id="strategy-name" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Risk Level</label>
-                                    <select class="form-select" id="riskLevel">
-                                        <option value="low">Low</option>
-                                        <option value="medium">Medium</option>
-                                        <option value="high">High</option>
+                                    <label class="form-label">Asset Class</label>
+                                    <select class="form-select" id="asset-class" required>
+                                        <option value="crypto">Cryptocurrency</option>
+                                        <option value="forex">Forex</option>
+                                        <option value="stocks">Stocks</option>
+                                        <option value="futures">Futures</option>
+                                        <option value="metals">Metals</option>
+                                        <option value="indices">Indices</option>
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Position Size (%)</label>
-                                    <input type="number" class="form-control" id="positionSize" min="1" max="100">
+                                    <label class="form-label">Risk Per Trade (%)</label>
+                                    <input type="number" class="form-control" id="risk-per-trade" min="0.1" max="10" step="0.1" value="2">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Max Daily Loss (%)</label>
+                                    <input type="number" class="form-control" id="max-daily-loss" min="1" max="20" step="0.5" value="5">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
+                                    <label class="form-label">Target Profit (%)</label>
+                                    <input type="number" class="form-control" id="target-profit" min="1" max="50" step="0.5" value="10">
+                                </div>
+                                <div class="mb-3">
                                     <label class="form-label">Stop Loss (%)</label>
-                                    <input type="number" class="form-control" id="stopLoss" min="1" max="50">
+                                    <input type="number" class="form-control" id="stop-loss" min="0.5" max="20" step="0.1" value="5">
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Take Profit (%)</label>
-                                    <input type="number" class="form-control" id="takeProfit" min="1" max="200">
+                                    <input type="number" class="form-control" id="take-profit" min="1" max="50" step="0.5" value="15">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Max Positions</label>
-                                    <input type="number" class="form-control" id="maxPositions" min="1" max="10">
+                                    <label class="form-label">Position Size Method</label>
+                                    <select class="form-select" id="position-size-method">
+                                        <option value="fixed">Fixed Amount</option>
+                                        <option value="kelly">Kelly Criterion</option>
+                                        <option value="martingale">Martingale</option>
+                                        <option value="risk-based">Risk-Based</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Advanced Parameters</label>
-                            <textarea class="form-control" id="advancedParams" rows="4" placeholder="JSON parameters..."></textarea>
+                            <label class="form-label">Technical Indicators</label>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="use-rsi">
+                                        <label class="form-check-label" for="use-rsi">RSI</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="use-macd">
+                                        <label class="form-check-label" for="use-macd">MACD</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="use-bollinger">
+                                        <label class="form-check-label" for="use-bollinger">Bollinger Bands</label>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -597,460 +458,13 @@
         </div>
     </div>
 
-    <!-- Emergency Close Modal -->
-    <div class="modal fade" id="emergencyModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title text-danger">
-                        <i class="bi bi-exclamation-triangle"></i> Emergency Close
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Are you sure you want to close all positions immediately?</p>
-                    <p class="text-warning">This action cannot be undone.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger" onclick="confirmEmergencyClose()">Close All Positions</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Bootstrap 5 JS -->
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
     <!-- Custom JS -->
-    <script>
-        // Global variables
-        let currentUser = null;
-        let portfolioData = null;
-        let strategies = [];
-        let positions = [];
-        let opportunities = [];
-
-        // Initialize the application
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeApp();
-        });
-
-        function initializeApp() {
-            loadDashboard();
-            setupNavigation();
-            setupCharts();
-            loadTradingView();
-            startRealTimeUpdates();
-        }
-
-        function setupNavigation() {
-            const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
-            navLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const target = this.getAttribute('href').substring(1);
-                    showSection(target);
-                });
-            });
-        }
-
-        function showSection(sectionName) {
-            // Hide all sections
-            document.querySelectorAll('[id$="-content"]').forEach(section => {
-                section.style.display = 'none';
-            });
-
-            // Show target section
-            const targetSection = document.getElementById(sectionName + '-content');
-            if (targetSection) {
-                targetSection.style.display = 'block';
-            }
-
-            // Update active nav link
-            document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
-                link.classList.remove('active');
-            });
-            event.target.classList.add('active');
-        }
-
-        function loadDashboard() {
-            // Simulate loading dashboard data
-            fetch('/api/dashboard')
-                .then(response => response.json())
-                .then(data => {
-                    updateDashboardStats(data);
-                })
-                .catch(error => {
-                    console.error('Error loading dashboard:', error);
-                    loadMockData();
-                });
-        }
-
-        function updateDashboardStats(data) {
-            document.getElementById('total-pnl').textContent = `$${data.platform_stats.total_pnl.toFixed(2)}`;
-            document.getElementById('active-positions').textContent = data.platform_stats.active_accounts;
-            document.getElementById('win-rate').textContent = '75%';
-            document.getElementById('portfolio-value').textContent = `$${data.platform_stats.total_pnl.toFixed(2)}`;
-        }
-
-        function loadMockData() {
-            // Load mock data for demonstration
-            document.getElementById('total-pnl').textContent = '$12,450.75';
-            document.getElementById('active-positions').textContent = '5';
-            document.getElementById('win-rate').textContent = '78%';
-            document.getElementById('portfolio-value').textContent = '$125,000.00';
-        }
-
-        function setupCharts() {
-            setupPortfolioChart();
-            setupAllocationChart();
-        }
-
-        function setupPortfolioChart() {
-            const ctx = document.getElementById('portfolioChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                    datasets: [{
-                        label: 'Portfolio Value',
-                        data: [100000, 105000, 112000, 108000, 115000, 125000],
-                        borderColor: '#3498db',
-                        backgroundColor: 'rgba(52, 152, 219, 0.1)',
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            labels: {
-                                color: '#ecf0f1'
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            ticks: {
-                                color: '#ecf0f1'
-                            },
-                            grid: {
-                                color: '#444'
-                            }
-                        },
-                        x: {
-                            ticks: {
-                                color: '#ecf0f1'
-                            },
-                            grid: {
-                                color: '#444'
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        function setupAllocationChart() {
-            const ctx = document.getElementById('allocationChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Stocks', 'Crypto', 'Bonds', 'Cash'],
-                    datasets: [{
-                        data: [40, 30, 20, 10],
-                        backgroundColor: [
-                            '#3498db',
-                            '#e74c3c',
-                            '#f39c12',
-                            '#27ae60'
-                        ]
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            labels: {
-                                color: '#ecf0f1'
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        function loadTradingView() {
-            new TradingView.widget({
-                "width": "100%",
-                "height": "100%",
-                "symbol": "NASDAQ:AAPL",
-                "interval": "D",
-                "timezone": "Etc/UTC",
-                "theme": "dark",
-                "style": "1",
-                "locale": "en",
-                "toolbar_bg": "#f1f3f6",
-                "enable_publishing": false,
-                "allow_symbol_change": true,
-                "container_id": "tradingview_chart"
-            });
-        }
-
-        function startRealTimeUpdates() {
-            // Simulate real-time updates
-            setInterval(() => {
-                updatePositions();
-                updateOpportunities();
-                updateAlerts();
-            }, 5000);
-        }
-
-        function updatePositions() {
-            const container = document.getElementById('positions-container');
-            const mockPositions = [
-                {
-                    symbol: 'AAPL',
-                    side: 'long',
-                    size: 100,
-                    entryPrice: 150.00,
-                    currentPrice: 155.50,
-                    pnl: 550.00,
-                    pnlPercent: 3.67
-                },
-                {
-                    symbol: 'BTC',
-                    side: 'short',
-                    size: 0.5,
-                    entryPrice: 50000,
-                    currentPrice: 48500,
-                    pnl: 750.00,
-                    pnlPercent: 3.0
-                }
-            ];
-
-            container.innerHTML = mockPositions.map(position => `
-                <div class="card position-card ${position.pnl < 0 ? 'loss' : ''} mb-3">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-md-3">
-                                <h6>${position.symbol}</h6>
-                                <small class="text-muted">${position.side.toUpperCase()}</small>
-                            </div>
-                            <div class="col-md-3">
-                                <div>Size: ${position.size}</div>
-                                <small class="text-muted">Entry: $${position.entryPrice}</small>
-                            </div>
-                            <div class="col-md-3">
-                                <div>Current: $${position.currentPrice}</div>
-                                <small class="text-muted">P&L: $${position.pnl.toFixed(2)}</small>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="text-${position.pnl >= 0 ? 'success' : 'danger'}">
-                                    ${position.pnlPercent.toFixed(2)}%
-                                </div>
-                                <button class="btn btn-sm btn-outline-danger" onclick="closePosition('${position.symbol}')">
-                                    Close
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function updateOpportunities() {
-            const container = document.getElementById('opportunities-container');
-            const mockOpportunities = [
-                {
-                    symbol: 'SOL',
-                    type: 'arbitrage',
-                    score: 0.85,
-                    profit: 2.5,
-                    risk: 'low',
-                    exchanges: ['Binance', 'Coinbase']
-                },
-                {
-                    symbol: 'ETH',
-                    type: 'trend',
-                    score: 0.72,
-                    profit: 1.8,
-                    risk: 'medium',
-                    timeframe: '4H'
-                }
-            ];
-
-            container.innerHTML = mockOpportunities.map(opp => `
-                <div class="card opportunity-card ${getScoreClass(opp.score)} mb-3">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-md-2">
-                                <h6>${opp.symbol}</h6>
-                                <span class="badge bg-primary">${opp.type}</span>
-                            </div>
-                            <div class="col-md-2">
-                                <div>Score: ${(opp.score * 100).toFixed(0)}%</div>
-                                <small class="text-muted">Profit: ${opp.profit}%</small>
-                            </div>
-                            <div class="col-md-2">
-                                <div>Risk: <span class="risk-indicator risk-${opp.risk}"></span>${opp.risk}</div>
-                                ${opp.exchanges ? `<small class="text-muted">${opp.exchanges.join(', ')}</small>` : ''}
-                            </div>
-                            <div class="col-md-2">
-                                ${opp.timeframe ? `<div>Timeframe: ${opp.timeframe}</div>` : ''}
-                            </div>
-                            <div class="col-md-4 text-end">
-                                <button class="btn btn-success btn-sm me-2" onclick="executeTrade('${opp.symbol}')">
-                                    Execute
-                                </button>
-                                <button class="btn btn-outline-primary btn-sm" onclick="analyzeOpportunity('${opp.symbol}')">
-                                    Analyze
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function updateAlerts() {
-            const container = document.getElementById('alerts-container');
-            const mockAlerts = [
-                {
-                    type: 'warning',
-                    message: 'High correlation detected between BTC and ETH positions',
-                    time: '2 min ago'
-                },
-                {
-                    type: 'info',
-                    message: 'New arbitrage opportunity detected on SOL',
-                    time: '5 min ago'
-                }
-            ];
-
-            container.innerHTML = mockAlerts.map(alert => `
-                <div class="alert alert-${alert.type} alert-dismissible fade show" role="alert">
-                    <i class="bi bi-${alert.type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
-                    ${alert.message}
-                    <small class="text-muted ms-2">${alert.time}</small>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            `).join('');
-        }
-
-        function getScoreClass(score) {
-            if (score >= 0.8) return 'high-score';
-            if (score >= 0.6) return 'medium-score';
-            return 'low-score';
-        }
-
-        // Strategy management functions
-        function configureStrategy(strategyName) {
-            document.getElementById('strategyName').value = strategyName;
-            const modal = new bootstrap.Modal(document.getElementById('strategyModal'));
-            modal.show();
-        }
-
-        function saveStrategy() {
-            const formData = {
-                name: document.getElementById('strategyName').value,
-                riskLevel: document.getElementById('riskLevel').value,
-                positionSize: document.getElementById('positionSize').value,
-                stopLoss: document.getElementById('stopLoss').value,
-                takeProfit: document.getElementById('takeProfit').value,
-                maxPositions: document.getElementById('maxPositions').value,
-                advancedParams: document.getElementById('advancedParams').value
-            };
-
-            // Save strategy configuration
-            console.log('Saving strategy:', formData);
-            
-            const modal = bootstrap.Modal.getInstance(document.getElementById('strategyModal'));
-            modal.hide();
-            
-            showToast('Strategy configuration saved successfully!', 'success');
-        }
-
-        // Emergency functions
-        function emergencyClose() {
-            const modal = new bootstrap.Modal(document.getElementById('emergencyModal'));
-            modal.show();
-        }
-
-        function confirmEmergencyClose() {
-            // Execute emergency close
-            console.log('Emergency close executed');
-            
-            const modal = bootstrap.Modal.getInstance(document.getElementById('emergencyModal'));
-            modal.hide();
-            
-            showToast('All positions closed successfully!', 'success');
-        }
-
-        function hedgePositions() {
-            console.log('Hedging positions...');
-            showToast('Hedging positions...', 'info');
-        }
-
-        function optimizeStrategies() {
-            console.log('Optimizing strategies...');
-            showToast('Strategy optimization in progress...', 'info');
-        }
-
-        // Trading functions
-        function executeTrade(symbol) {
-            console.log('Executing trade for:', symbol);
-            showToast(`Trade executed for ${symbol}!`, 'success');
-        }
-
-        function analyzeOpportunity(symbol) {
-            console.log('Analyzing opportunity for:', symbol);
-            showToast(`Analysis completed for ${symbol}!`, 'info');
-        }
-
-        function closePosition(symbol) {
-            console.log('Closing position for:', symbol);
-            showToast(`Position closed for ${symbol}!`, 'success');
-        }
-
-        function refreshOpportunities() {
-            console.log('Refreshing opportunities...');
-            updateOpportunities();
-            showToast('Opportunities refreshed!', 'info');
-        }
-
-        // Utility functions
-        function showToast(message, type = 'info') {
-            const toastContainer = document.createElement('div');
-            toastContainer.className = 'toast-container position-fixed top-0 end-0 p-3';
-            toastContainer.style.zIndex = '9999';
-            
-            const toast = document.createElement('div');
-            toast.className = `toast align-items-center text-white bg-${type} border-0`;
-            toast.setAttribute('role', 'alert');
-            
-            toast.innerHTML = `
-                <div class="d-flex">
-                    <div class="toast-body">
-                        ${message}
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-                </div>
-            `;
-            
-            toastContainer.appendChild(toast);
-            document.body.appendChild(toastContainer);
-            
-            const bsToast = new bootstrap.Toast(toast);
-            bsToast.show();
-            
-            toast.addEventListener('hidden.bs.toast', () => {
-                document.body.removeChild(toastContainer);
-            });
-        }
-    </script>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/dashboard.js"></script>
+    <script src="assets/js/strategies.js"></script>
+    <script src="assets/js/backtester.js"></script>
+    <script src="assets/js/trading.js"></script>
 </body>
 </html>
